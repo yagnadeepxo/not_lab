@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct packet {
+  int time;
+  int size;
+} p[50];
+
+int main() {
+  int n;
+  int bsize, bfilled, outrate;
+  printf("Enter the number of packets: ");
+  scanf("%d", &n);
+  printf("Enter the packets in order: ");
+  for (int i = 0; i < n; i++) {
+    printf("Enter the time and size: ");
+    scanf("%d%d", &p[i].time, &p[i].size);
+  }
+
+  printf("Enter the size of the bucket: ");
+  scanf("%d", &bsize);
+
+  printf("Enter the outrate: ");
+  scanf("%d", &outrate);
+
+  int m = p[n - 1].time;
+  int i = 1;
+  int k = 0;
+  bfilled = 0;
+  while (i <= m) {
+    printf("\nAt time %d:", i);
+    if (p[k].time == i) {
+      if (bsize >= bfilled + p[k].size) {
+        bfilled = bfilled + p[k].size;
+        printf("\n %d packet is inserted", p[k].size);
+        k++;
+      } else {
+        printf("\nPacket of size %d is discarded", p[k].size);
+        k++;
+      }
+    }
+
+    if (bfilled >= outrate) {
+      bfilled = bfilled - outrate;
+      printf("\n%d bytes transferred", outrate);
+    } else if (bfilled > 0) {
+      printf("\nBytes transferred: %d", bfilled);
+      bfilled = 0;
+    } else {
+      printf("\nBucket is empty");
+    }
+
+    printf("\nPackets in bucket: %d", bfilled);
+    i++;
+  }
+
+  return 0;
+}
